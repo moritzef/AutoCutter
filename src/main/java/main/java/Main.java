@@ -64,7 +64,7 @@ public class Main {
 
             try {
                 progress.update(progress.getGraphics());
-                Editor editor = new Editor(paths, pathmusic.get(1), pathmusic.get(0));
+                new Editor(paths, pathmusic.get(1), pathmusic.get(0));
                 System.gc();
             } catch (Exception ex) {
                 ex.printStackTrace();

@@ -46,6 +46,12 @@ public class Editor {
         for (String str : videoUris) {
             set_Trimmer(str, 0, get_video_duration(str), null);
         }
+        for (Thread t : Thread.getAllStackTraces().keySet())
+            if (t.getName().equals("Finalizer")) {
+                System.out.println(t);
+                t.setPriority(Thread.MAX_PRIORITY);
+                System.out.println(t);
+            }
         countDownLatch.countDown();
         numberOfClips = part;
         System.out.println("number of clips: " + numberOfClips);
@@ -95,7 +101,7 @@ public class Editor {
         File audioFile = new File(pathMP3);
         FileInputStream stream = new FileInputStream(audioFile);
         Decoder decoder = new JLayerMp3Decoder(stream);
-        Beat[] beats = BeatDetector.detectBeats(decoder, BeatDetector.DetectorSensitivity.LOW);
+        Beat[] beats = BeatDetector.detectBeats(decoder, BeatDetector.DetectorSensitivity.MIDDLING);
         for (int i = 0; i < beats.length; i++) {
             System.out.println(beats[i]);
         }
@@ -106,7 +112,7 @@ public class Editor {
         ArrayList<Double> analyzedData = new ArrayList<Double>();
         analyzedData.add(0.0);
         for (int t = 0; t < beat.length; t++) {
-            if (beat[t].energy > 0.16) analyzedData.add((double) beat[t].timeMs);
+            if (beat[t].energy > 0.12) analyzedData.add((double) beat[t].timeMs);
         }
         return analyzedData;
     }
@@ -148,6 +154,7 @@ public class Editor {
                 }
             }
         }
+        if (motionFrames != null) motionFrames.clear();
     }
 
 }
