@@ -21,7 +21,7 @@ public class Trimmer {
     public Trimmer() {
     }
 
-    public BufferedImage getFirstFrame(String input) throws IOException, JCodecException {
+    public BufferedImage get_first_frame_scaled(String input) throws IOException, JCodecException {
         File file = new File(input);
 
         FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
@@ -42,7 +42,7 @@ public class Trimmer {
     }
 
 
-    public void Trim(final String input, final String output, final double start, final int frames) throws IOException, JCodecException {
+    public void trim(final String input, final String output, final double start, final int frames) throws IOException, JCodecException {
         int frameCount = frames;
         SeekableByteChannel out = null;
         File file = new File(input);
@@ -84,7 +84,7 @@ public class Trimmer {
 
     }
 
-    public void createEnding(String input, String output, int width, int height) throws IOException, JCodecException {
+    public void create_ending(String input, String output, int width, int height) throws IOException, JCodecException {
         SeekableByteChannel out = null;
         try {
             out = NIOUtils.writableFileChannel(output);
@@ -116,7 +116,7 @@ public class Trimmer {
 
     }
 
-    public BufferedImage getImage(String input) throws IOException, JCodecException {
+    public BufferedImage get_image(String input) throws IOException, JCodecException {
         File file = new File(input);
         FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
         grab.seekToSecondPrecise(0);

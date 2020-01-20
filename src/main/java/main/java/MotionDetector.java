@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MotionDetect {
+public class MotionDetector {
     ArrayList<Double> differences;
 
-    public MotionDetect() {
+    public MotionDetector() {
 
     }
 
-    public ArrayList<Double> getMotion(final String input, Double duration, Double startSec) throws IOException, JCodecException {
+    public ArrayList<Double> get_motion(final String input, Double duration, Double startSec) throws IOException, JCodecException {
         differences = new ArrayList<Double>();
         double output = 0;
         int frameCount = (int) Math.floor(duration * 30);
@@ -77,7 +77,7 @@ public class MotionDetect {
         return differences;
     }
 
-    public int getPeak(ArrayList<Double> list, double startSec) {
+    public int get_peak(ArrayList<Double> list, double startSec) {
         try {
             return list.stream().filter(a -> list.indexOf(a) > startSec * 30 + 1).filter(a -> a > 0.04).map(a -> list.indexOf(a)).findFirst().get();
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class MotionDetect {
         }
     }
 
-    public Double getAverage(ArrayList<Double> list, int startSec, int duration) {
+    public Double get_average(ArrayList<Double> list, int startSec, int duration) {
         Double sum = list.stream().filter(a -> list.indexOf(a) >= startSec && list.indexOf(a) <= startSec + duration).mapToDouble(a -> a).sum() / list.stream().filter(a -> list.indexOf(a) >= startSec && list.indexOf(a) <= startSec + duration).mapToDouble(a -> 1).sum();
         System.out.println("sum is " + sum);
         return sum;

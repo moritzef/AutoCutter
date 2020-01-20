@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cut {
-    public Cut(String[] videoUris, String music) throws IOException {
+public class Merge {
+    public Merge(String[] videoUris, String music) throws IOException {
         List<Movie> inMovies = new ArrayList<Movie>();
         for (String videoUri : videoUris) {
             inMovies.add(MovieCreator.build(videoUri));

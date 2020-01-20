@@ -35,17 +35,17 @@ public class Main {
 
         mainFrame.setResizable(false);
 
-        JButton button1 = new JButton("add Clip");
-        JButton button2 = new JButton("add Music");
+        JButton button1 = new JButton("add clip");
+        JButton button2 = new JButton("add music");
         JButton button3 = new JButton("cut");
 
-        JLabel label = new JLabel("Your Files");
+        JLabel label = new JLabel("Your files");
 
         panel.add(label);
         panel.add(button1);
         button1.addActionListener(e -> {
             try {
-                addClip(true);
+                add_clip(true);
             } catch (IOException | JCodecException ex) {
                 ex.printStackTrace();
             }
@@ -53,7 +53,7 @@ public class Main {
         panel.add(button2);
         button2.addActionListener(e -> {
             try {
-                addClip(false);
+                add_clip(false);
             } catch (IOException | JCodecException ex) {
                 ex.printStackTrace();
             }
@@ -86,7 +86,7 @@ public class Main {
     }
 
 
-    public static void addClip(boolean isPic) throws IOException, JCodecException {
+    public static void add_clip(boolean isPic) throws IOException, JCodecException {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
         chooser.showOpenDialog(mainFrame);
@@ -97,7 +97,7 @@ public class Main {
             clipfile.setVisible(true);
             clipfile.setBounds(60, 34 + height, 550, 18);
             if (isPic) {
-                JLabel picLabel = new JLabel(new ImageIcon(trimmer.getFirstFrame(files[i].toString().replace("\\", "\\\\"))));
+                JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString().replace("\\", "\\\\"))));
                 panel.add(picLabel);
                 picLabel.setBounds(10, 34 + height, 18, 18);
                 paths.add(files[i].toString().replace("\\", "\\\\"));
