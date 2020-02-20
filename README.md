@@ -2,12 +2,12 @@
 A fully automatic video editor that synchronizes the cuts to the beats of the music.
 
 Usage:
-use the add Clip button to add mp4 clips (30fps) and use the add music button to add music.
+use the add Clip button to add mp4 clips (supports all fps) and use the add music button to add music.
 The program needs two versions of music files: 1. .aac file
                                                2. .mp3 file
                                                
 Common issues:
-java heap space error - increase the heap size (will be fixed soon) 
+java heap space error - increase the heap size 
 
 GitHub projects i use:
 qlyoung/lwbd : https://github.com/qlyoung/lwbd
