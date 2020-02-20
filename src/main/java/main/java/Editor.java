@@ -66,7 +66,7 @@ public class Editor {
         cl.countDown();
         System.out.println("number of clips: " + this.numberOfClips);
         System.gc();
-        es.awaitTermination(60, TimeUnit.MINUTES);
+        es.awaitTermination(24, TimeUnit.HOURS);
     }
 
     public void create_end(ArrayList<String> videoUris, String musicMP3) throws IOException, JCodecException {
