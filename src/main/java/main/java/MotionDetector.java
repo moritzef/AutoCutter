@@ -11,19 +11,19 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
 
 public class MotionDetector {
-    ArrayList<Double> differences;
+
 
     public MotionDetector() {
 
     }
 
-    public ArrayList<Double> get_motion(final String input, Double duration, Double startSec) throws IOException, JCodecException {
-        differences = new ArrayList<Double>();
+    public ArrayList<Double> get_motion(final String input, int frameCount, Double startSec) throws IOException, JCodecException {
+        ArrayList<Double> differences = new ArrayList<Double>();
         double output = 0;
-        int frameCount = (int) Math.floor(duration * 30);
         Color colour1, colour2;
         int r1, g1, b1;
         int r2, g2, b2;
@@ -90,5 +90,60 @@ public class MotionDetector {
         System.out.println("sum is " + sum);
         return sum;
     }
+
+    public ArrayList<Double> get_single_motion_threaded(String URI, int single_framecount, double single_start_sec) throws InterruptedException, ExecutionException {
+        ExecutorService es = Executors.newSingleThreadExecutor();
+        Future<ArrayList<Double>> result = es.submit(new Callable<ArrayList<Double>>() {
+            public ArrayList<Double> call() throws Exception {
+                return get_motion(URI, single_framecount, single_start_sec);
+            }
+        });
+        return result.get();
+    }
+
+
+
+/*
+    public ArrayList<Double> get_motion_threaded(String URI, double duration) throws InterruptedException, IOException, JCodecException {
+        ExecutorService es = Executors.newCachedThreadPool();
+        output = new double[(int)Math.floor(duration*30)-1];
+        int single_frameCount = 0;
+        int single_start_sec=0;
+        for(int t = 0; t<Math.ceil(duration);t++) {
+            if(Math.floor(duration)==Math.ceil(duration)) single_frameCount = 30;
+            if(Math.floor(duration)!=Math.ceil(duration)){ single_frameCount = (t==(int)Math.floor(duration))?(int)Math.floor(duration*30)%29:30;}
+            single_start_sec += (t==0)?0:1;
+            int finalSingle_frameCount = single_frameCount;
+            int finalSingle_start_sec = single_start_sec;
+            //es.execute(() -> {
+                try {
+
+                        double[] sub_motion = get_single_motion_threaded(URI, finalSingle_frameCount, finalSingle_start_sec);
+
+                            for (int i = 0; i < sub_motion.length; i++) {
+                                this.output[i + finalSingle_start_sec * 29] = sub_motion[i];
+                            }
+
+
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                //es.shutdown();
+            //});
+        }
+        //es.awaitTermination(50,TimeUnit.MINUTES);
+
+
+
+
+
+        ArrayList<Double> out = new ArrayList<>();
+        for (double v : this.output) out.add(v);
+        return out;
+    }
+
+    */
+
+
 }
 

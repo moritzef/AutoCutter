@@ -79,8 +79,6 @@ public class Main {
         progress.setStringPainted(true);
         panel.add(progress);
         progress.setVisible(true);
-
-
         mainFrame.setVisible(true);
 
     }
@@ -99,7 +97,7 @@ public class Main {
             if (isPic) {
                 JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString().replace("\\", "\\\\"))));
                 panel.add(picLabel);
-                picLabel.setBounds(10, 34 + height, 18, 18);
+                picLabel.setBounds(5, 34 + height, 32, 18);
                 paths.add(files[i].toString().replace("\\", "\\\\"));
             } else {
                 pathmusic.add(files[i].toString().replace("\\", "\\\\"));

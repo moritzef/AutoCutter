@@ -29,11 +29,11 @@ public class Trimmer {
         Picture picture = grab.getNativeFrame();
         BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
 
-        BufferedImage resized = new BufferedImage(18, 18, bufferedImage.getType());
+        BufferedImage resized = new BufferedImage(32, 18, bufferedImage.getType());
         Graphics2D g = resized.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(bufferedImage, 0, 0, 18, 18, 0, 0, bufferedImage.getWidth(),
+        g.drawImage(bufferedImage, 0, 0, 32, 18, 0, 0, bufferedImage.getWidth(),
                 bufferedImage.getHeight(), null);
         g.dispose();
         bufferedImage.flush();
@@ -42,54 +42,34 @@ public class Trimmer {
     }
 
 
-    public void trim(final String input, final String output, final double start, final int frames) throws IOException, JCodecException {
+    public void trim(final String input, final String output, final double start, final int frames, final int fps) throws IOException, JCodecException {
         int frameCount = frames;
-        SeekableByteChannel out = null;
+        SeekableByteChannel out = NIOUtils.writableFileChannel(output);
         File file = new File(input);
-        FrameGrab grab = null;
+        FrameGrab grab;
         grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
         grab.seekToSecondPrecise(start);
-        out = NIOUtils.writableFileChannel(output);
-        AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(30, 1));
+        AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(fps, 1));
         Picture picture;
-        /*int r1,g1,b1;
-        Color colour1;
-        BufferedImage image;
-         */
+
+
         for (int i = 0; i < frameCount; i++) {
-
-
             picture = grab.getNativeFrame();
-            /*image = AWTUtil.toBufferedImage(picture);
-            int width = image.getWidth(), height=image.getHeight();
-                for (int y = 1; y < height; y++) {
-                    for (int x = 1; x < width; x++) {
-                        colour1 = new Color(image.getRGB(x, y));
-                        r1 = (colour1.getRed()>=215)?255:colour1.getRed()+40;
-                        g1 = (colour1.getGreen()>=215)?255:colour1.getGreen()+40;
-                        b1 = (colour1.getBlue()>=215)?255:colour1.getBlue()+40;
-                        image.setRGB(x,y,new Color(r1, g1, b1).getRGB());        }
-                }
-
-
-             */
             System.out.println(AWTUtil.toBufferedImage(picture).getWidth() + "x" + AWTUtil.toBufferedImage(picture).getHeight() + " " + picture.getColor());
             //for JDK (jcodec-javase)
             encoder.encodeImage(AWTUtil.toBufferedImage(picture));
         }
         // Finalize the encoding, i.e. clear the buffers, write the header, etc.
-
         encoder.finish();
         NIOUtils.closeQuietly(out);
-
     }
 
-    public void create_ending(String input, String output, int width, int height) throws IOException, JCodecException {
+    public void create_ending(String input, String output, int width, int height, int fps) throws IOException, JCodecException {
         SeekableByteChannel out = null;
         try {
             out = NIOUtils.writableFileChannel(output);
 
-            AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(30, 1));
+            AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(fps, 1));
 
             BufferedImage image = ImageIO.read(new File(input));
 
