@@ -64,6 +64,35 @@ public class Trimmer {
         NIOUtils.closeQuietly(out);
     }
 
+    public void create_beginning(String input, String output, int width, int height, int fps, int length) throws IOException, JCodecException {
+        SeekableByteChannel out = null;
+        try {
+            out = NIOUtils.writableFileChannel(output);
+
+            AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(fps, 1));
+
+            BufferedImage image = ImageIO.read(new File(input));
+
+            BufferedImage resized = new BufferedImage(width, height, image.getType());
+            Graphics2D g = resized.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(image, 0, 0, width, height, 0, 0, image.getWidth(),
+                    image.getHeight(), null);
+            g.dispose();
+            // Encode the image
+            for (int t = 0; t < length; t++) {
+                encoder.encodeImage(resized);
+            }
+
+            // Finalize the encoding, i.e. clear the buffers, write the header, etc.
+            encoder.finish();
+        } finally {
+            NIOUtils.closeQuietly(out);
+        }
+
+    }
+
     public void create_ending(String input, String output, int width, int height, int fps) throws IOException, JCodecException {
         SeekableByteChannel out = null;
         try {

@@ -23,12 +23,13 @@ public class Editor {
     Main m;
     String absolutePath = new File("Slices").getAbsolutePath().replace("\\", "\\\\") + "//";
     String endPicture = absolutePath + "Ending.png";
+    String startPicture = absolutePath + "beginning.png";
     Trimmer trimmer;
     MotionDetector motion;
     float progressInPercent = 0;
     CountDownLatch thread_counter;
     int part = 0;
-    int MAX_THREADS = 4;
+    int MAX_THREADS = Runtime.getRuntime().availableProcessors();
     ArrayList<Double> Length;
     ArrayList<String> paths;
     ExecutorService es = Executors.newCachedThreadPool();
@@ -39,14 +40,15 @@ public class Editor {
     public Editor(ArrayList<String> videoUris, String musicMP3, String musicAAC) throws Exception {
         motion = new MotionDetector();
         trimmer = new Trimmer();
-        trim_all(videoUris, musicMP3);
+        this.Length = get_lengths_of_music(musicMP3);
+        this.paths = new ArrayList<>();
+        this.fps = get_fps(videoUris.get(0));
+        start(videoUris);
+        trim_all(videoUris);
         create_end(videoUris, musicAAC);
     }
 
-    public void trim_all(ArrayList<String> videoUris, String musicMP3) throws Exception {
-        Length = get_lengths_of_music(musicMP3);
-        paths = new ArrayList<>();
-        this.fps = get_fps(videoUris.get(0));
+    public void trim_all(ArrayList<String> videoUris) throws Exception {
         cl = new CountDownLatch(1);
         for (String str : videoUris) {
             System.out.println("fps: " + get_fps(str));
@@ -67,6 +69,12 @@ public class Editor {
         System.out.println("number of clips: " + this.numberOfClips);
         System.gc();
         es.awaitTermination(24, TimeUnit.HOURS);
+    }
+
+    public void start(ArrayList<String> videoUris) throws IOException, JCodecException {
+        trimmer.create_beginning(startPicture, absolutePath + "firstClip.mp4", trimmer.get_image(videoUris.get(0)).getWidth(), trimmer.get_image(videoUris.get(0)).getHeight(), this.fps, (int) Math.round(this.Length.get(this.part) * this.fps));
+        this.paths.add(absolutePath + "firstClip.mp4");
+        this.part++;
     }
 
     public void create_end(ArrayList<String> videoUris, String musicMP3) throws IOException, JCodecException {
@@ -132,7 +140,7 @@ public class Editor {
     public ArrayList<Double> get_peaks(Beat[] beat) {
         ArrayList<Double> analyzedData = new ArrayList<Double>();
         analyzedData.add(0.0);
-        for (int t = 0; t < beat.length - 1; t++) {
+        for (int t = 0; t < beat.length; t++) {
             if (beat[t].energy > 0.2) analyzedData.add((double) beat[t].timeMs);
         }
         return analyzedData;
@@ -140,20 +148,21 @@ public class Editor {
 
     public void update_Progress() {
         this.progressInPercent += ((((float) 1 / (float) this.numberOfClips) * 85));
+        System.out.println(this.numberOfClips + "  " + this.progressInPercent);
         m.progress.setValue((int) this.progressInPercent);
         m.progress.update(m.progress.getGraphics());
     }
 
     public void set_Trimmer(String URI, float lengthBefore, double duration, ArrayList<Double> motionFrames) {
         if (duration >= this.Length.get(this.part) + lengthBefore && this.Length.get(this.part) != null) {
-            if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > 0.016) {
+            if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > 0.017) {
                 int finalPart = this.part;
                 int final_thread_number = this.part;
                 es.execute(() -> {
                     try {
                         cl.await();
                         while (true) {
-                            if ((int) thread_counter.getCount() < final_thread_number + MAX_THREADS + 1) break;
+                            if ((int) thread_counter.getCount() <= final_thread_number + MAX_THREADS) break;
                             Thread.sleep(500);
                         }
                         trimmer.trim(URI, this.absolutePath + finalPart + ".mp4", lengthBefore, (int) Math.round((this.Length.get(finalPart)) * this.fps), this.fps);
@@ -162,7 +171,6 @@ public class Editor {
                         e.printStackTrace();
                     }
                     System.out.println("now");
-                    update_Progress();
 
                     System.gc();
                     thread_counter.countDown();

@@ -7,6 +7,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -32,6 +34,7 @@ public class Main {
         mainFrame.setSize(700, 1080);
         mainFrame.setTitle("AutoCutter");
         panel = new JPanel();
+        ExecutorService thread = Executors.newSingleThreadExecutor();
 
         mainFrame.setResizable(false);
 
@@ -64,7 +67,13 @@ public class Main {
 
             try {
                 progress.update(progress.getGraphics());
-                new Editor(paths, pathmusic.get(1), pathmusic.get(0));
+                thread.execute(() -> {
+                    try {
+                        new Editor(paths, pathmusic.get(1), pathmusic.get(0));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
                 System.gc();
             } catch (Exception ex) {
                 ex.printStackTrace();
