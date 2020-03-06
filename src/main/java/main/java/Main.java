@@ -20,6 +20,8 @@ public class Main {
     public static Trimmer trimmer;
     public static ArrayList<String> pathmusic;
 
+    public static File recentPath;
+
     /**
      * @param args the command line arguments
      */
@@ -90,12 +92,18 @@ public class Main {
         progress.setVisible(true);
         mainFrame.setVisible(true);
 
+
+        recentPath = new File(System.getProperty("user.dir"));
+        System.out.println(recentPath);
     }
 
 
     public static void add_clip(boolean isPic) throws IOException, JCodecException {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
+        if(isPic) chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Videodatei", "mp4"));
+        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audiodatei", "acc", "mp3"));
+        chooser.setCurrentDirectory(recentPath);
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
         for (int i = 0; i < files.length; i++) {
