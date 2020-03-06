@@ -101,8 +101,8 @@ public class Main {
     public static void add_clip(boolean isPic) throws IOException, JCodecException {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        if(isPic) chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Videodatei", "mp4"));
-        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audiodatei", "acc", "mp3"));
+        if(isPic) chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
+        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "acc", "mp3"));
         chooser.setCurrentDirectory(recentPath);
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
