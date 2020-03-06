@@ -102,15 +102,15 @@ public class Main {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
         if(isPic) chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
-        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "acc", "mp3"));
+        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "aac", "mp3"));
         chooser.setCurrentDirectory(recentPath);
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
         for (int i = 0; i < files.length; i++) {
-            JTextField clipfile = new JTextField(files[i].toString(), 400);
-            panel.add(clipfile);
-            clipfile.setVisible(true);
-            clipfile.setBounds(60, 34 + height, 550, 18);
+            JTextField clipFile = new JTextField(files[i].toString(), 400);
+            panel.add(clipFile);
+            clipFile.setVisible(true);
+            clipFile.setBounds(60, 34 + height, 550, 18);
             if (isPic) {
                 JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString().replace("\\", "\\\\"))));
                 panel.add(picLabel);
