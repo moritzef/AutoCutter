@@ -20,6 +20,7 @@ public class StartGUI {
     public JFrame mainFrame;
     public ArrayList<String> paths;
     public JPanel panel;
+    public JPanel panel2;
     public int height;
     public Trimmer trimmer;
     public ArrayList<String> pathmusic;
@@ -38,7 +39,9 @@ public class StartGUI {
         mainFrame = new JFrame();
         mainFrame.setSize(700, 720);
         mainFrame.setTitle("AutoCutter");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
+        panel2 = new JPanel();
         ExecutorService thread = Executors.newSingleThreadExecutor();
 
         optionsPanel = new JPanel();
@@ -66,6 +69,8 @@ public class StartGUI {
         JButton button3 = new JButton("cut");
 
         JLabel label = new JLabel("Your files");
+
+        //panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
         panel.add(label);
         panel.add(button1);
@@ -114,16 +119,19 @@ public class StartGUI {
             }
         });
 
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+
         mainFrame.add(panel, BorderLayout.NORTH);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        panel.setBackground(Color.gray);
+        mainFrame.add(panel2, BorderLayout.CENTER);
+
+        panel.setBackground(Color.darkGray);
+        panel2.setBackground(Color.gray);
 
         progress = new JProgressBar(0, 100);
         progress.setStringPainted(true);
         panel.add(progress);
         progress.setVisible(true);
         mainFrame.setVisible(true);
-
 
         recentPath = new File(System.getProperty("user.dir"));
         System.out.println(recentPath);
@@ -138,13 +146,19 @@ public class StartGUI {
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
         for (int i = 0; i < files.length; i++) {
+            /*
+            JPanel clipPanel = new JPanel();
+            clipPanel.setBackground(Color.lightGray);
+            panel2.add(clipPanel);
+            clipPanel.setBounds(60, 34 + height, 700, 180);
+            */
             JTextField clipFile = new JTextField(files[i].toString(), 400);
-            panel.add(clipFile);
+            panel2.add(clipFile);
             clipFile.setVisible(true);
             clipFile.setBounds(60, 34 + height, 550, 18);
             if (isPic) {
                 JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString().replace("\\", "\\\\"))));
-                panel.add(picLabel);
+                panel2.add(picLabel);
                 picLabel.setBounds(5, 34 + height, 32, 18);
                 paths.add(files[i].toString().replace("\\", "\\\\"));
             } else {

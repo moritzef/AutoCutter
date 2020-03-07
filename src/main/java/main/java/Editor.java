@@ -160,35 +160,37 @@ public class Editor {
     }
 
     public void set_Trimmer(String URI, float lengthBefore, double duration, ArrayList<Double> motionFrames) {
-        if (duration >= this.Length.get(this.part) + lengthBefore && this.Length.get(this.part) != null) {
-            if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > 0.017) {
-                int finalPart = this.part;
-                int final_thread_number = this.part;
-                es.execute(() -> {
-                    try {
-                        cl.await();
-                        while (true) {
-                            if ((int) thread_counter.getCount() <= final_thread_number + MAX_THREADS) break;
-                            Thread.sleep(500);
+        if(this.part < this.Length.size()) {
+            if (duration >= this.Length.get(this.part) + lengthBefore && this.Length.get(this.part) != null) {
+                if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > 0.017) {
+                    int finalPart = this.part;
+                    int final_thread_number = this.part;
+                    es.execute(() -> {
+                        try {
+                            cl.await();
+                            while (true) {
+                                if ((int) thread_counter.getCount() <= final_thread_number + MAX_THREADS) break;
+                                Thread.sleep(500);
+                            }
+                            trimmer.trim(URI, this.absolutePath + finalPart + ".mp4", lengthBefore, (int) Math.round((this.Length.get(finalPart)) * this.fps), this.fps);
+                            update_Progress();
+                        } catch (IOException | JCodecException | InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        trimmer.trim(URI, this.absolutePath + finalPart + ".mp4", lengthBefore, (int) Math.round((this.Length.get(finalPart)) * this.fps), this.fps);
-                        update_Progress();
-                    } catch (IOException | JCodecException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("now");
+                        System.out.println("now");
 
-                    System.gc();
-                    thread_counter.countDown();
-                    es.shutdown();
-                });
-                this.paths.add(this.absolutePath + part + ".mp4");
-                this.part++;
-                set_Trimmer(URI, (float) (1 + lengthBefore + this.Length.get(this.part - 1)), duration, motionFrames);
-            } else {
-                if (motion.get_peak(motionFrames, lengthBefore) != -1 && motion.get_peak(motionFrames, lengthBefore) + (this.fps * this.Length.get(this.part)) < duration * this.fps) {
-                    System.out.println(motion.get_peak(motionFrames, lengthBefore));
-                    set_Trimmer(URI, (motion.get_peak(motionFrames, lengthBefore) / (float) this.fps), duration, motionFrames);
+                        System.gc();
+                        thread_counter.countDown();
+                        es.shutdown();
+                    });
+                    this.paths.add(this.absolutePath + part + ".mp4");
+                    this.part++;
+                    set_Trimmer(URI, (float) (1 + lengthBefore + this.Length.get(this.part - 1)), duration, motionFrames);
+                } else {
+                    if (motion.get_peak(motionFrames, lengthBefore) != -1 && motion.get_peak(motionFrames, lengthBefore) + (this.fps * this.Length.get(this.part)) < duration * this.fps) {
+                        System.out.println(motion.get_peak(motionFrames, lengthBefore));
+                        set_Trimmer(URI, (motion.get_peak(motionFrames, lengthBefore) / (float) this.fps), duration, motionFrames);
+                    }
                 }
             }
         }
