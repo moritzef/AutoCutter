@@ -8,7 +8,9 @@ import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
+import com.googlecode.mp4parser.authoring.tracks.AC3TrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
+import com.googlecode.mp4parser.authoring.tracks.MP3TrackImpl;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -44,7 +46,9 @@ public class Merge {
         Movie result = new Movie();
         if (!music.equals("")) {
             try {
-                result.addTrack(new AACTrackImpl(new FileDataSourceImpl(music)));
+                String ext = music.substring(music.lastIndexOf('.') + 1);
+                if(ext.equals("aac")) result.addTrack(new AACTrackImpl(new FileDataSourceImpl(music)));
+                if(ext.equals("ac3")) result.addTrack(new AC3TrackImpl(new FileDataSourceImpl(music)));
             } catch (Exception i) {
                 System.err.println("no music found");
             }

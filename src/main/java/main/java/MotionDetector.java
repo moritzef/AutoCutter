@@ -16,9 +16,10 @@ import java.util.concurrent.*;
 
 public class MotionDetector {
 
+    StartGUI gui;
 
-    public MotionDetector() {
-
+    public MotionDetector(StartGUI sgui) {
+        gui = sgui;
     }
 
     public ArrayList<Double> get_motion(final String input, int frameCount, Double startSec) throws IOException, JCodecException {
@@ -68,6 +69,11 @@ public class MotionDetector {
 
                 bufferedImage1 = bufferedImage2;
                 picture = grab.getNativeFrame();
+                for(int j = 0; j < gui.skipFrames; j++) {
+
+                    picture = grab.getNativeFrame();
+                    i++;
+                }
                 bufferedImage2 = AWTUtil.toBufferedImage(picture);
 
             }
