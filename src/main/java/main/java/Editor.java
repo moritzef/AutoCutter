@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Editor {
-    Main m;
+    StartGUI gui;
     String absolutePath = new File("Slices").getAbsolutePath().replace("\\", "\\\\") + "//";
     String endPicture = absolutePath + "Ending.png";
     String startPicture = absolutePath + "beginning.png";
@@ -37,14 +37,19 @@ public class Editor {
     int fps;
     CountDownLatch cl;
 
-    public Editor(ArrayList<String> videoUris, String musicMP3, String musicAAC) throws Exception {
-        motion = new MotionDetector();
+    public Editor(ArrayList<String> videoUris, String musicMP3, String musicAAC, StartGUI sgui) throws Exception {
+        gui = sgui;
+        motion = new MotionDetector(gui);
         trimmer = new Trimmer();
         this.Length = get_lengths_of_music(musicMP3);
+        System.out.println("Acquired Length of Music");
         this.paths = new ArrayList<>();
         this.fps = get_fps(videoUris.get(0));
+        System.out.println("Acquired FPS: " + fps);
         start(videoUris);
+        System.out.println("Start finished");
         trim_all(videoUris);
+        System.out.println("TrimAll finished");
         create_end(videoUris, musicAAC);
     }
 
@@ -88,8 +93,8 @@ public class Editor {
     public void merge_all(String[] pathsmusic, String musicMP3) throws IOException {
         Merge c = new Merge(pathsmusic, musicMP3);
         System.out.println("file ready");
-        m.progress.setValue(100);
-        m.progress.update(m.progress.getGraphics());
+        gui.progress.setValue(100);
+        gui.progress.update(gui.progress.getGraphics());
     }
 
     public double get_video_duration(String filepath) throws IOException {
@@ -118,6 +123,7 @@ public class Editor {
             try {
                 Length.add((analyzedData.get(t + 1) - analyzedData.get(t)) / 1000);
                 System.out.println(analyzedData.get(t + 1) - analyzedData.get(t));
+                //System.out.println(".");
             } catch (Exception e) {
                 break;
             }
@@ -132,7 +138,7 @@ public class Editor {
         Decoder decoder = new JLayerMp3Decoder(stream);
         Beat[] beats = BeatDetector.detectBeats(decoder, BeatDetector.DetectorSensitivity.MIDDLING);
         for (Beat beat : beats) {
-            System.out.println(beat);
+            System.out.println("Beat: " + beat);
         }
         return get_peaks(beats);
     }
@@ -149,8 +155,8 @@ public class Editor {
     public void update_Progress() {
         this.progressInPercent += ((((float) 1 / (float) this.numberOfClips) * 85));
         System.out.println(this.numberOfClips + "  " + this.progressInPercent);
-        m.progress.setValue((int) this.progressInPercent);
-        m.progress.update(m.progress.getGraphics());
+        gui.progress.setValue((int) this.progressInPercent);
+        gui.progress.update(gui.progress.getGraphics());
     }
 
     public void set_Trimmer(String URI, float lengthBefore, double duration, ArrayList<Double> motionFrames) {
