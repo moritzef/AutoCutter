@@ -10,7 +10,6 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.AC3TrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
-import com.googlecode.mp4parser.authoring.tracks.MP3TrackImpl;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
