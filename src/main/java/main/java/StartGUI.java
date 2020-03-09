@@ -120,6 +120,9 @@ public class StartGUI {
         });
 
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+        JScrollPane scrollPane = new JScrollPane(panel2);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         mainFrame.add(panel, BorderLayout.NORTH);
         mainFrame.add(panel2, BorderLayout.CENTER);
