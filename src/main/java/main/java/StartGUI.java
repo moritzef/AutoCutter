@@ -110,7 +110,7 @@ public class StartGUI {
                             ex.printStackTrace();
                         }
                     } else {
-                        System.out.println("Please add at least one Video Clip and the right Audio Clips");
+                        System.out.println("Please add at least one Video Clips and the right Audio Clips");
                     }
                 });
                 System.gc();
@@ -140,8 +140,8 @@ public class StartGUI {
     public void add_clip(boolean isPic) throws IOException, JCodecException {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        if(isPic) chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
-        else      chooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "aac", "mp3"));
+        if(isPic) chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
+        else      chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "aac", "mp3", "ac3"));
         chooser.setCurrentDirectory(recentPath);
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
