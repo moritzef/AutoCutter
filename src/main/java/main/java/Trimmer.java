@@ -83,6 +83,7 @@ public class Trimmer {
             // Encode the image
             for (int t = 0; t < length; t++) {
                 encoder.encodeImage(resized);
+                System.out.println(t);
             }
 
             // Finalize the encoding, i.e. clear the buffers, write the header, etc.

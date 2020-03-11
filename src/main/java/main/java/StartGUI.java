@@ -19,14 +19,18 @@ public class StartGUI {
     public JPanel panel2;
     public Trimmer trimmer;
     public ArrayList<String> pathmusic;
-    public GridBagConstraints GBC;
+
 
     public File recentPath;
     public JPanel optionsPanel;
 
     public int skipFrames;
+    public double peak,average,sensitivity;
 
     public StartGUI() {
+        peak = 0.04;
+        average = 0.02;
+        sensitivity = 0.2;
         pathmusic = new ArrayList<>();
         paths = new ArrayList<>();
         trimmer = new Trimmer();
@@ -41,7 +45,7 @@ public class StartGUI {
 
         ExecutorService thread = Executors.newSingleThreadExecutor();
 
-        /*optionsPanel = new JPanel();
+        optionsPanel = new JPanel();
         mainFrame.add(optionsPanel, BorderLayout.SOUTH);
 
         optionsPanel.setMaximumSize(new Dimension(700, 160));
@@ -50,15 +54,31 @@ public class StartGUI {
         JPanel option1 = new JPanel();
         optionsPanel.add(option1);
 
-        JTextField option1Text = new JTextField("Skip Frames");
+        JTextField option1Text = new JTextField("detector average");
         option1Text.setEditable(false);
-        option1.add(option1Text, BorderLayout.NORTH);
+        option1.add(option1Text);
 
-        JTextField option1TextField = new JTextField("1");
-        option1TextField.setPreferredSize(new Dimension(40, 20));
-        option1.add(option1TextField, BorderLayout.SOUTH);
+        JTextField averageField = new JTextField("0,02");
+        averageField.setPreferredSize(new Dimension(40, 20));
+        option1.add(averageField);
 
-         */
+        JTextField option2Text = new JTextField("detector peaks");
+        option2Text.setEditable(false);
+        option1.add(option2Text);
+
+        JTextField peakField = new JTextField("0,04");
+        peakField.setPreferredSize(new Dimension(40, 20));
+        option1.add(peakField);
+
+        JTextField option3Text = new JTextField("beat sensitivity");
+        option3Text.setEditable(false);
+        option1.add(option3Text);
+
+        JTextField beatSensitivity = new JTextField("0,2");
+        beatSensitivity.setPreferredSize(new Dimension(40, 20));
+        option1.add(beatSensitivity);
+
+
 
 
         JButton button1 = new JButton("add clip");
@@ -94,9 +114,13 @@ public class StartGUI {
                     if (!(paths.size() == 0 || pathmusic.size() == 0)) {
 
                         try {
-                            //skipFrames = Integer.parseInt(option1TextField.getText());
+                            average = Integer.parseInt(averageField.getText());
+                            peak = Integer.parseInt(peakField.getText());
+                            sensitivity = Integer.parseInt(peakField.getText());
                         } catch (NumberFormatException nfex) {
-                            //skipFrames = 0;
+                            average = 0.02;
+                            peak = 0.04;
+                            sensitivity = 0.2;
                         }
 
                         try {
@@ -131,9 +155,6 @@ public class StartGUI {
         panel.add(progress);
         progress.setVisible(true);
         mainFrame.setVisible(true);
-
-        recentPath = new File(System.getProperty("user.dir"));
-        System.out.println(recentPath);
     }
 
     public void add_clip(boolean isPic) throws IOException, JCodecException {
@@ -162,6 +183,7 @@ public class StartGUI {
             rowPanel.add(clipFile);
             panel2.add(rowPanel);
         }
+        recentPath = chooser.getCurrentDirectory();
         mainFrame.setVisible(true);
     }
 

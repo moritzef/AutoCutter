@@ -85,7 +85,7 @@ public class MotionDetector {
 
     public int get_peak(ArrayList<Double> list, double startSec) {
         try {
-            return list.stream().filter(a -> list.indexOf(a) > startSec * 30 + 1).filter(a -> a > 0.04).map(a -> list.indexOf(a)).findFirst().get();
+            return list.stream().filter(a -> list.indexOf(a) > startSec * 30 + 1).filter(a -> a > gui.peak).map(a -> list.indexOf(a)).findFirst().get();
         } catch (Exception e) {
             return -1;
         }
