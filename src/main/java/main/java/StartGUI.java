@@ -41,7 +41,9 @@ public class StartGUI {
 
         ExecutorService thread = Executors.newSingleThreadExecutor();
 
-        /*optionsPanel = new JPanel();
+
+
+        optionsPanel = new JPanel();
         mainFrame.add(optionsPanel, BorderLayout.SOUTH);
 
         optionsPanel.setMaximumSize(new Dimension(700, 160));
@@ -54,11 +56,10 @@ public class StartGUI {
         option1Text.setEditable(false);
         option1.add(option1Text, BorderLayout.NORTH);
 
-        JTextField option1TextField = new JTextField("1");
+        JTextField option1TextField = new JTextField("0");
         option1TextField.setPreferredSize(new Dimension(40, 20));
         option1.add(option1TextField, BorderLayout.SOUTH);
 
-         */
 
 
         JButton button1 = new JButton("add clip");
@@ -94,9 +95,9 @@ public class StartGUI {
                     if (!(paths.size() == 0 || pathmusic.size() == 0)) {
 
                         try {
-                            //skipFrames = Integer.parseInt(option1TextField.getText());
+                            skipFrames = Integer.parseInt(option1TextField.getText());
                         } catch (NumberFormatException nfex) {
-                            //skipFrames = 0;
+                            skipFrames = 0;
                         }
 
                         try {
