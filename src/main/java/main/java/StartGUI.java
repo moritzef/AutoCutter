@@ -78,6 +78,10 @@ public class StartGUI {
         beatSensitivity.setPreferredSize(new Dimension(40, 20));
         option1.add(beatSensitivity);
 
+        //JTextField option1TextField = new JTextField("0");
+        //option1TextField.setPreferredSize(new Dimension(40, 20));
+        //option1.add(option1TextField, BorderLayout.SOUTH);
+
 
 
 
@@ -117,10 +121,14 @@ public class StartGUI {
                             average = Integer.parseInt(averageField.getText());
                             peak = Integer.parseInt(peakField.getText());
                             sensitivity = Integer.parseInt(beatSensitivity.getText());
+                          
+                            //skipFrames = Integer.parseInt(option1TextField.getText());
                         } catch (NumberFormatException nfex) {
                             average = 0.02;
                             peak = 0.04;
                             sensitivity = 0.2;
+                          
+                            //skipFrames = 0;
                         }
 
                         try {
