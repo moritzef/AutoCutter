@@ -30,7 +30,7 @@ public class Merge {
 
         for (Movie m : inMovies) {
             for (Track t : m.getTracks()) {
-                if (!music.equals("")) {
+                if (music.equals("")) {
                     if (t.getHandler().equals("soun")) {
                         audioTracks.add(t);
                     }
@@ -39,6 +39,7 @@ public class Merge {
                     videoTracks.add(t);
                 }
             }
+            System.out.println("merging");
         }
 
 

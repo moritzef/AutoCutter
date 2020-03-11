@@ -51,17 +51,17 @@ public class StartGUI {
         optionsPanel.setMaximumSize(new Dimension(700, 160));
         optionsPanel.setBackground(Color.darkGray);
 
-        JPanel option1 = new JPanel();
-        optionsPanel.add(option1);
+        //JPanel option1 = new JPanel();
+        //optionsPanel.add(option1);
 
 
         JTextField option1Text = new JTextField("detector average");
         option1Text.setEditable(false);
-        option1.add(option1Text);
+        optionsPanel.add(option1Text);
 
         JTextField averageField = new JTextField("0,02");
         averageField.setPreferredSize(new Dimension(40, 20));
-        option1.add(averageField);
+        optionsPanel.add(averageField);
 
 
         JPanel option2 = new JPanel();
@@ -69,6 +69,7 @@ public class StartGUI {
 
         JTextField option2Text = new JTextField("detector peaks");
         option2Text.setEditable(false);
+
         option2.add(option2Text);
 
         JTextField peakField = new JTextField("0,04");
@@ -95,6 +96,7 @@ public class StartGUI {
         option4Text.setEditable(false);
         option4.add(option4Text);
 
+
         JTextField option4TextField = new JTextField("0");
         option4TextField.setPreferredSize(new Dimension(40, 20));
         option4.add(option4TextField);
@@ -107,6 +109,8 @@ public class StartGUI {
         JButton button3 = new JButton("cut");
 
         JLabel label = new JLabel("Your files");
+        label.setForeground(Color.white);
+
 
         panel.add(label);
         panel.add(button1);
@@ -132,7 +136,7 @@ public class StartGUI {
             try {
                 progress.update(progress.getGraphics());
                 thread.execute(() -> {
-                    if (!(paths.size() == 0 || pathmusic.size() == 0)) {
+                    if (paths.size() > 0 && pathmusic.size() >= 2) {
 
                         try {
                             average = Integer.parseInt(averageField.getText());
@@ -153,8 +157,20 @@ public class StartGUI {
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
-                    } else {
-                        System.out.println("Please add at least one Video Clips and the right Audio Clips");
+                    }
+                    if(pathmusic.size() <2 && paths.size() > 0) {
+                        try {
+                            String[] arrayPath = new String[paths.size()];
+                            arrayPath = paths.toArray(arrayPath);
+                            new Merge(arrayPath,"");
+                            progress.setValue(100);
+                            progress.update(progress.getGraphics());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    if(paths.size() == 0) {
+                        System.out.println("Please add at least one video clip");
                     }
                 });
                 System.gc();
