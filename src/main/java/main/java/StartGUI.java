@@ -54,6 +54,7 @@ public class StartGUI {
         JPanel option1 = new JPanel();
         optionsPanel.add(option1);
 
+
         JTextField option1Text = new JTextField("detector average");
         option1Text.setEditable(false);
         option1.add(option1Text);
@@ -62,25 +63,41 @@ public class StartGUI {
         averageField.setPreferredSize(new Dimension(40, 20));
         option1.add(averageField);
 
+
+        JPanel option2 = new JPanel();
+        optionsPanel.add(option2);
+
         JTextField option2Text = new JTextField("detector peaks");
         option2Text.setEditable(false);
-        option1.add(option2Text);
+        option2.add(option2Text);
 
         JTextField peakField = new JTextField("0,04");
         peakField.setPreferredSize(new Dimension(40, 20));
-        option1.add(peakField);
+        option2.add(peakField);
+
+
+        JPanel option3 = new JPanel();
+        optionsPanel.add(option3);
 
         JTextField option3Text = new JTextField("beat sensitivity");
         option3Text.setEditable(false);
-        option1.add(option3Text);
+        option3.add(option3Text);
 
         JTextField beatSensitivity = new JTextField("0,2");
         beatSensitivity.setPreferredSize(new Dimension(40, 20));
-        option1.add(beatSensitivity);
+        option3.add(beatSensitivity);
 
-        //JTextField option1TextField = new JTextField("0");
-        //option1TextField.setPreferredSize(new Dimension(40, 20));
-        //option1.add(option1TextField, BorderLayout.SOUTH);
+
+        JPanel option4 = new JPanel();
+        optionsPanel.add(option4);
+
+        JTextField option4Text = new JTextField("skip frames");
+        option4Text.setEditable(false);
+        option4.add(option4Text);
+
+        JTextField option4TextField = new JTextField("0");
+        option4TextField.setPreferredSize(new Dimension(40, 20));
+        option4.add(option4TextField);
 
 
 
@@ -122,13 +139,13 @@ public class StartGUI {
                             peak = Integer.parseInt(peakField.getText());
                             sensitivity = Integer.parseInt(beatSensitivity.getText());
                           
-                            //skipFrames = Integer.parseInt(option1TextField.getText());
+                            skipFrames = Integer.parseInt(option4TextField.getText());
                         } catch (NumberFormatException nfex) {
                             average = 0.02;
                             peak = 0.04;
                             sensitivity = 0.2;
                           
-                            //skipFrames = 0;
+                            skipFrames = 0;
                         }
 
                         try {
