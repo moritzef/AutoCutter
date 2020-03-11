@@ -29,7 +29,7 @@ public class Editor {
     float progressInPercent = 0;
     CountDownLatch thread_counter;
     int part = 0;
-    int MAX_THREADS = Runtime.getRuntime().availableProcessors();
+    int MAX_THREADS = Runtime.getRuntime().availableProcessors()+1;
     ArrayList<Double> Length;
     ArrayList<String> paths;
     ExecutorService es = Executors.newCachedThreadPool();
@@ -42,7 +42,6 @@ public class Editor {
         motion = new MotionDetector(gui);
         trimmer = new Trimmer();
         this.Length = get_lengths_of_music(musicMP3);
-        System.out.println("Acquired Length of Music");
         this.paths = new ArrayList<>();
         this.fps = get_fps(videoUris.get(0));
         System.out.println("Acquired FPS: " + fps);
@@ -58,6 +57,7 @@ public class Editor {
         for (String str : videoUris) {
             System.out.println("fps: " + get_fps(str));
             set_Trimmer(str, 0, get_video_duration(str), motion.get_single_motion_threaded(str, (int) Math.floor(get_video_duration(str) * this.fps), 0));
+            update_Progress_motion(videoUris);
         }
         for (Thread t : Thread.getAllStackTraces().keySet()) {
             if (t.getName().equals("Finalizer")) {
@@ -91,7 +91,7 @@ public class Editor {
     }
 
     public void merge_all(String[] pathsmusic, String musicMP3) throws IOException {
-        Merge c = new Merge(pathsmusic, musicMP3);
+        new Merge(pathsmusic, musicMP3);
         System.out.println("file ready");
         gui.progress.setValue(100);
         gui.progress.update(gui.progress.getGraphics());
@@ -123,7 +123,6 @@ public class Editor {
             try {
                 Length.add((analyzedData.get(t + 1) - analyzedData.get(t)) / 1000);
                 System.out.println(analyzedData.get(t + 1) - analyzedData.get(t));
-                //System.out.println(".");
             } catch (Exception e) {
                 break;
             }
@@ -147,13 +146,20 @@ public class Editor {
         ArrayList<Double> analyzedData = new ArrayList<Double>();
         analyzedData.add(0.0);
         for (int t = 0; t < beat.length; t++) {
-            if (beat[t].energy > 0.2) analyzedData.add((double) beat[t].timeMs);
+            if (beat[t].energy > gui.sensitivity) analyzedData.add((double) beat[t].timeMs);
         }
         return analyzedData;
     }
 
+    public void update_Progress_motion(ArrayList<String> videoUris) {
+        this.progressInPercent += (((float) 1 / ((float) (videoUris.size()-1)*2)) * 85);
+        System.out.println(this.numberOfClips + "  " + this.progressInPercent);
+        gui.progress.setValue((int) this.progressInPercent);
+        gui.progress.update(gui.progress.getGraphics());
+    }
+
     public void update_Progress() {
-        this.progressInPercent += ((((float) 1 / (float) this.numberOfClips) * 85));
+        this.progressInPercent += (((float) 1 / ((float) this.numberOfClips*2)) * 85);
         System.out.println(this.numberOfClips + "  " + this.progressInPercent);
         gui.progress.setValue((int) this.progressInPercent);
         gui.progress.update(gui.progress.getGraphics());
@@ -162,7 +168,7 @@ public class Editor {
     public void set_Trimmer(String URI, float lengthBefore, double duration, ArrayList<Double> motionFrames) {
         if(this.part < this.Length.size()) {
             if (duration >= this.Length.get(this.part) + lengthBefore && this.Length.get(this.part) != null) {
-                if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > 0.017) {
+                if (motion.get_average(motionFrames, (int) Math.floor(lengthBefore * this.fps), (int) Math.floor(this.Length.get(this.part) * this.fps)) > gui.average) {
                     int finalPart = this.part;
                     int final_thread_number = this.part;
                     es.execute(() -> {
@@ -170,7 +176,7 @@ public class Editor {
                             cl.await();
                             while (true) {
                                 if ((int) thread_counter.getCount() <= final_thread_number + MAX_THREADS) break;
-                                Thread.sleep(500);
+                                Thread.sleep(300);
                             }
                             trimmer.trim(URI, this.absolutePath + finalPart + ".mp4", lengthBefore, (int) Math.round((this.Length.get(finalPart)) * this.fps), this.fps);
                             update_Progress();
