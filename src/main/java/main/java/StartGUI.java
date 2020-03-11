@@ -116,7 +116,7 @@ public class StartGUI {
                         try {
                             average = Integer.parseInt(averageField.getText());
                             peak = Integer.parseInt(peakField.getText());
-                            sensitivity = Integer.parseInt(peakField.getText());
+                            sensitivity = Integer.parseInt(beatSensitivity.getText());
                         } catch (NumberFormatException nfex) {
                             average = 0.02;
                             peak = 0.04;
