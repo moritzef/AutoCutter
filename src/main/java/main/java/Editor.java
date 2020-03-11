@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Editor {
     StartGUI gui;
-    String absolutePath = new File("Slices").getAbsolutePath().replace("\\", "\\\\") + "//";
+    String absolutePath = new File("Slices").getAbsolutePath() + "//";
     String endPicture = absolutePath + "Ending.png";
     String startPicture = absolutePath + "beginning.png";
     Trimmer trimmer;
