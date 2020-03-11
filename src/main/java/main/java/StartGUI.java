@@ -3,13 +3,9 @@ package main.java;
 import org.jcodec.api.JCodecException;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,9 +17,9 @@ public class StartGUI {
     public ArrayList<String> paths;
     public JPanel panel;
     public JPanel panel2;
-    public int height;
     public Trimmer trimmer;
     public ArrayList<String> pathmusic;
+    public GridBagConstraints GBC;
 
     public File recentPath;
     public JPanel optionsPanel;
@@ -31,21 +27,21 @@ public class StartGUI {
     public int skipFrames;
 
     public StartGUI() {
-
         pathmusic = new ArrayList<>();
         paths = new ArrayList<>();
-        height = 0;
         trimmer = new Trimmer();
         mainFrame = new JFrame();
-        mainFrame.setSize(700, 720);
+        mainFrame.setSize(700, 400);
         mainFrame.setTitle("AutoCutter");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
         panel2 = new JPanel();
+        panel2.setLayout(new javax.swing.BoxLayout(
+                panel2, javax.swing.BoxLayout.Y_AXIS));
+
         ExecutorService thread = Executors.newSingleThreadExecutor();
 
-        optionsPanel = new JPanel();
-        //mainFrame.add(panel);
+        /*optionsPanel = new JPanel();
         mainFrame.add(optionsPanel, BorderLayout.SOUTH);
 
         optionsPanel.setMaximumSize(new Dimension(700, 160));
@@ -62,15 +58,14 @@ public class StartGUI {
         option1TextField.setPreferredSize(new Dimension(40, 20));
         option1.add(option1TextField, BorderLayout.SOUTH);
 
-        //mainFrame.setResizable(false);
+         */
+
 
         JButton button1 = new JButton("add clip");
         JButton button2 = new JButton("add music");
         JButton button3 = new JButton("cut");
 
         JLabel label = new JLabel("Your files");
-
-        //panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
         panel.add(label);
         panel.add(button1);
@@ -96,12 +91,12 @@ public class StartGUI {
             try {
                 progress.update(progress.getGraphics());
                 thread.execute(() -> {
-                    if(!(paths.size() == 0 || pathmusic.size() == 0)) {
+                    if (!(paths.size() == 0 || pathmusic.size() == 0)) {
 
                         try {
-                            skipFrames = Integer.parseInt(option1TextField.getText());
+                            //skipFrames = Integer.parseInt(option1TextField.getText());
                         } catch (NumberFormatException nfex) {
-                            skipFrames = 0;
+                            //skipFrames = 0;
                         }
 
                         try {
@@ -119,13 +114,14 @@ public class StartGUI {
             }
         });
 
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         JScrollPane scrollPane = new JScrollPane(panel2);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+
+        mainFrame.add(scrollPane);
+
         mainFrame.add(panel, BorderLayout.NORTH);
-        mainFrame.add(panel2, BorderLayout.CENTER);
 
         panel.setBackground(Color.darkGray);
         panel2.setBackground(Color.gray);
@@ -143,32 +139,30 @@ public class StartGUI {
     public void add_clip(boolean isPic) throws IOException, JCodecException {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        if(isPic) chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
-        else      chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "aac", "mp3", "ac3"));
+        if (isPic) chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Video", "mp4"));
+        else chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Audio", "aac", "mp3", "ac3"));
         chooser.setCurrentDirectory(recentPath);
         chooser.showOpenDialog(mainFrame);
         File[] files = chooser.getSelectedFiles();
         for (int i = 0; i < files.length; i++) {
-            /*
-            JPanel clipPanel = new JPanel();
-            clipPanel.setBackground(Color.lightGray);
-            panel2.add(clipPanel);
-            clipPanel.setBounds(60, 34 + height, 700, 180);
-            */
-            JTextField clipFile = new JTextField(files[i].toString(), 400);
-            panel2.add(clipFile);
-            clipFile.setVisible(true);
-            clipFile.setBounds(60, 34 + height, 550, 18);
+            JPanel rowPanel = new JPanel();
+            rowPanel.setLayout(new javax.swing.BoxLayout(
+                    rowPanel, javax.swing.BoxLayout.X_AXIS));
             if (isPic) {
-                JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString().replace("\\", "\\\\"))));
-                panel2.add(picLabel);
-                picLabel.setBounds(5, 34 + height, 32, 18);
-                paths.add(files[i].toString().replace("\\", "\\\\"));
+                JLabel picLabel = new JLabel(new ImageIcon(trimmer.get_first_frame_scaled(files[i].toString())));
+                picLabel.setSize(32, 18);
+                rowPanel.add(picLabel);
+
+                paths.add(files[i].toString());
             } else {
-                pathmusic.add(files[i].toString().replace("\\", "\\\\"));
+                pathmusic.add(files[i].toString());
             }
-            height = height + 20;
+            JTextField clipFile = new JTextField(files[i].toString(), 200);
+            clipFile.setMaximumSize(clipFile.getPreferredSize());
+            rowPanel.add(clipFile);
+            panel2.add(rowPanel);
         }
+        mainFrame.setVisible(true);
     }
 
 }
