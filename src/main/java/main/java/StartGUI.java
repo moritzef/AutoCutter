@@ -51,17 +51,16 @@ public class StartGUI {
         optionsPanel.setMaximumSize(new Dimension(700, 160));
         optionsPanel.setBackground(Color.darkGray);
 
-        //JPanel option1 = new JPanel();
-        //optionsPanel.add(option1);
-
+        JPanel option1 = new JPanel();
+        optionsPanel.add(option1);
 
         JTextField option1Text = new JTextField("detector average");
         option1Text.setEditable(false);
-        optionsPanel.add(option1Text);
+        option1.add(option1Text);
 
         JTextField averageField = new JTextField("0,02");
         averageField.setPreferredSize(new Dimension(40, 20));
-        optionsPanel.add(averageField);
+        option1.add(averageField);
 
 
         JPanel option2 = new JPanel();
@@ -87,19 +86,6 @@ public class StartGUI {
         JTextField beatSensitivity = new JTextField("0,2");
         beatSensitivity.setPreferredSize(new Dimension(40, 20));
         option3.add(beatSensitivity);
-
-
-        JPanel option4 = new JPanel();
-        optionsPanel.add(option4);
-
-        JTextField option4Text = new JTextField("skip frames");
-        option4Text.setEditable(false);
-        option4.add(option4Text);
-
-
-        JTextField option4TextField = new JTextField("0");
-        option4TextField.setPreferredSize(new Dimension(40, 20));
-        option4.add(option4TextField);
 
 
 
@@ -143,13 +129,13 @@ public class StartGUI {
                             peak = Integer.parseInt(peakField.getText());
                             sensitivity = Integer.parseInt(beatSensitivity.getText());
                           
-                            skipFrames = Integer.parseInt(option4TextField.getText());
+                            //skipFrames = Integer.parseInt(option1TextField.getText());
                         } catch (NumberFormatException nfex) {
                             average = 0.02;
                             peak = 0.04;
                             sensitivity = 0.2;
                           
-                            skipFrames = 0;
+                            //skipFrames = 0;
                         }
 
                         try {

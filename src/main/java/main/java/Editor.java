@@ -21,6 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Editor {
     StartGUI gui;
+    /*
+    this.jar = new File(this.url.toURI());
+      this.f = new File(this.jar.getParent(), "jarSlices");
+      this.absolutePath = this.f.getAbsolutePath() + "//";
+     */
     String absolutePath = new File("Slices").getAbsolutePath() + "//";
     String endPicture = absolutePath + "Ending.png";
     String startPicture = absolutePath + "beginning.png";
@@ -152,14 +157,14 @@ public class Editor {
     }
 
     public void update_Progress_motion(ArrayList<String> videoUris) {
-        this.progressInPercent += (((float) 1 / ((float) (videoUris.size()-1)*2)) * 85);
+        this.progressInPercent += (((float) 1 / ((float) (videoUris.size())*2)) * 85);
         System.out.println(this.numberOfClips + "  " + this.progressInPercent);
         gui.progress.setValue((int) this.progressInPercent);
         gui.progress.update(gui.progress.getGraphics());
     }
 
     public void update_Progress() {
-        this.progressInPercent += (((float) 1 / ((float) this.numberOfClips*2)) * 85);
+        this.progressInPercent += (((float) 1 / ((float) (this.numberOfClips-1)*2)) * 85);
         System.out.println(this.numberOfClips + "  " + this.progressInPercent);
         gui.progress.setValue((int) this.progressInPercent);
         gui.progress.update(gui.progress.getGraphics());
@@ -180,7 +185,7 @@ public class Editor {
                             }
                             trimmer.trim(URI, this.absolutePath + finalPart + ".mp4", lengthBefore, (int) Math.round((this.Length.get(finalPart)) * this.fps), this.fps);
                             update_Progress();
-                        } catch (IOException | JCodecException | InterruptedException e) {
+                        } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
                         }
                         System.out.println("now");

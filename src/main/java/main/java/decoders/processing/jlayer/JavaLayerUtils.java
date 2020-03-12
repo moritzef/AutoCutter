@@ -123,9 +123,7 @@ public class JavaLayerUtils {
 
     static public Object deserializeArrayResource(String name, Class elemType, int length)
             throws IOException {
-        File initialFile = new File(new File("src\\main\\resources\\sfd.ser").getAbsolutePath().replace("\\", "\\\\"));
-        System.out.println(new File("src\\main\\resources").getAbsolutePath().replace("\\", "\\\\") + "\\sfd.ser");
-        InputStream str = new FileInputStream(initialFile);
+        InputStream str =JavaLayerUtils.class.getClassLoader().getResourceAsStream("sfd.ser");
         if (str == null)
             throw new IOException("unable to load resource '" + name + "'");
 
